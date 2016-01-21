@@ -1,0 +1,14 @@
+C:\workspaces\Matchable\Temp\UnityVS_obj\Debug\Matchable.CSharp.csprojResolveAssemblyReference.cache
+C:\workspaces\Matchable\Temp\UnityVS_bin\Debug\Assembly-CSharp.dll
+C:\workspaces\Matchable\Temp\UnityVS_bin\Debug\Assembly-CSharp.pdb
+C:\workspaces\Matchable\Temp\UnityVS_bin\Debug\Ionic.Zlib.CF.dll
+C:\workspaces\Matchable\Temp\UnityVS_bin\Debug\UnityEditor.dll
+C:\workspaces\Matchable\Temp\UnityVS_bin\Debug\UnityEngine.dll
+C:\workspaces\Matchable\Temp\UnityVS_bin\Debug\UnityEngine.Networking.dll
+C:\workspaces\Matchable\Temp\UnityVS_bin\Debug\UnityEngine.UI.dll
+C:\workspaces\Matchable\Temp\UnityVS_bin\Debug\UnityEngine.xml
+C:\workspaces\Matchable\Temp\UnityVS_bin\Debug\UnityEngine.UI.xml
+C:\workspaces\Matchable\Temp\UnityVS_bin\Debug\UnityEngine.Networking.xml
+C:\workspaces\Matchable\Temp\UnityVS_bin\Debug\UnityEditor.xml
+C:\workspaces\Matchable\Temp\UnityVS_obj\Debug\Assembly-CSharp.dll
+C:\workspaces\Matchable\Temp\UnityVS_obj\Debug\Assembly-CSharp.pdb
