@@ -41,8 +41,8 @@ public class MatchableDemo : MonoBehaviour
         {
             // Handle the API response the way you want
             _log = response.ToJsonString();
-            // Get the advisor
-            _log += "\n\nAdvisor: " + response.GetKey("advisor");
+            // Ex: get the advisor value
+            _log += "\n\nAdvisor: " + response.GetValue("advisor");
         }));
     }
 

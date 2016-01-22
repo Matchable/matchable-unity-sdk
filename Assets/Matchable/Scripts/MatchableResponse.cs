@@ -40,10 +40,10 @@ namespace MatchableSDK
         }
 
         /// <summary>
-        /// Retrieve the specific key in the _data Hashtable
+        /// Retrieve the value for the given key in the _data Hashtable
         /// </summary>
-        /// <returns>The Hashtable containing attributes from the JSON response</returns>
-        public object GetKey(string key)
+        /// <returns>The value matching the key</returns>
+        public object GetValue(string key)
         {
             return GetData()[key];
         }
