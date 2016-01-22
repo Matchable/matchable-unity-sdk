@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Runtime.InteropServices;
+using System.Collections.Generic;
 #if UNITY_4_6 || UNITY_5
 using UnityEngine.EventSystems;
 #endif
@@ -21,13 +22,11 @@ namespace MatchableSDK
 
         string _customerKey;
         string _playerId;
-        ArrayList _actions;
-
+        
         public Matchable(string customerKey, string playerId)
         {
             _customerKey = customerKey;
             _playerId = playerId;
-            _actions = new ArrayList();
         }
 
         /// <summary>
@@ -56,7 +55,7 @@ namespace MatchableSDK
         /// Retrieve all the statistics available for the default player
         /// ex:http://api.matchable.io/v0.9/mplayers/<CUSTOMER_KEY>/<PLAYER_ID>/
         /// </summary>
-        public IEnumerator GetPlayerStats(Action<string> callback)
+        public IEnumerator GetStats(Action<object> callback)
         {
             WWW response = new WWW(BuildPlayerUrl("mplayers"));
             yield return response;
@@ -65,20 +64,8 @@ namespace MatchableSDK
             {
                 jsonData = System.Text.Encoding.UTF8.GetString(response.bytes);
                 yield return jsonData;
-                callback(jsonData);
+                callback(MJSON.Deserialize(jsonData));
             }
-        }
-
-        /// <summary>
-        /// Class modelling a player action object
-        /// </summary>
-        [Serializable]
-        class PlayerAction
-        {
-            public string player_id;
-            public string type;
-            public string parameters;
-            public Int32 date;
         }
 
         /// <summary>
@@ -87,50 +74,46 @@ namespace MatchableSDK
         /// </summary>
         /// <param name="type">Action type (ex: game_start)</param>
         /// <param name="parameters">Action parameters (JSON string)</param>
-        public void AddPlayerAction(string type, string parameters)
+        protected Hashtable CreateAction(string type, object parameters)
         {
-            PlayerAction action = new PlayerAction();
-            action.player_id = _playerId;
-            action.type = type;
-            action.parameters = parameters;
-            action.date = TimeStamp.UnixTimeStampUTC();
-            _actions.Add(action);
+            Hashtable action = new Hashtable();
+            action.Add("player_id", _playerId);
+            action.Add("type", type);
+            action.Add("parameters", parameters);
+            action.Add("date", TimeStamp.UnixTimeStampUTC());
+            return action;
         }
 
         /// <summary>
-        /// Remove all the actions that were added for the default player using AddPlayerAction
+        /// Send a player action with the given type and parameters.
+        /// Then executes the given callback when the response is received.
         /// </summary>
-        public void CleanPlayerActions()
+        public IEnumerator SendAction(string type, object parameters, Action<object> callback)
         {
-            _actions = new ArrayList();
-        }
+            if (type == null) {
+                Debug.LogError("SendAction(): type is mandatory");
+                yield return null;
+            }
 
-        /// <summary>
-        /// Send all the actions that were added for the default player using AddPlayerAction
-        /// </summary>
-        public IEnumerator SendPlayerActions(Action<string> callback)
-        {
-            WWW response = new WWW(BuildCustomerUrl("mactions"));   // UTF-8 encoded json file on the server
+            Dictionary<string, string> headers = new Dictionary<string, string>();
+            headers.Add("Content-Type", "application/json");
+
+            Hashtable action = CreateAction(type, parameters);
+            
+            // Simple hack to wrap the action inside a JSON array
+            string data = "[" + MJSON.Serialize(action) + "]";
+            Debug.Log("Sent actions:" + data);
+            byte[] postData = System.Text.Encoding.ASCII.GetBytes(data.ToCharArray());
+
+            WWW response = new WWW(BuildCustomerUrl("mactions"), postData, headers);
             yield return response;
             string jsonData = "";
             if (string.IsNullOrEmpty(response.error))
             {
                 jsonData = System.Text.Encoding.UTF8.GetString(response.bytes);
                 yield return jsonData;
-                callback(jsonData);
+                callback(MJSON.Deserialize(jsonData));
             }
-
-            HTTP.Request request = new HTTP.Request("POST", BuildCustomerUrl("mactions"), _actions);
-            request.Send();
-            while (!request.isDone)
-            {
-                yield return null;
-            }
-            CleanPlayerActions();
-            Debug.Log(request.InfoString(true));
-            yield return (request.response.Text);
-            callback(request.response.Text);
-
         }
 
         /// <summary>
@@ -138,7 +121,7 @@ namespace MatchableSDK
         /// This action is obtained using a strategy based on the different scores computed by Matchable. 
         /// The strategies can be specifically developped for each customer in collaboration with Matchable's data scientists.
         /// </summary>
-        public IEnumerator GetPlayerAdvisor(Action<string> callback)
+        public IEnumerator GetAdvisor(Action<object> callback)
         {
             WWW response = new WWW(BuildPlayerUrl("advisor"));
             yield return response;
@@ -147,7 +130,7 @@ namespace MatchableSDK
             {
                 jsonData = System.Text.Encoding.UTF8.GetString(response.bytes);
                 yield return jsonData;
-                callback(jsonData);
+                callback(MJSON.Deserialize(jsonData));
             }
         }
     }

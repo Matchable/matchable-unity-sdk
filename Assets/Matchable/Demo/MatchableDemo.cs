@@ -36,8 +36,8 @@ public class MatchableDemo : MonoBehaviour
     {
         _test = "GetPlayerStats";
         _log = "Waiting for response...";
-        yield return StartCoroutine(_match.GetPlayerStats((stats) => {
-            _log = stats;
+        yield return StartCoroutine(_match.GetStats((stats) => {
+            _log = stats.ToString();
         }));
     }
 
@@ -45,8 +45,8 @@ public class MatchableDemo : MonoBehaviour
     {
         _test = "GetPlayerAdvisor";
         _log = "Waiting for response...";
-        yield return StartCoroutine(_match.GetPlayerAdvisor((advisor) => {
-            _log = advisor;
+        yield return StartCoroutine(_match.GetAdvisor((advisor) => {
+            _log = advisor.ToString();
         }));
     }
     
@@ -54,14 +54,10 @@ public class MatchableDemo : MonoBehaviour
     {
         _test = "SendPlayerAction";
         _log = "Waiting for response...";
-        _match.AddPlayerAction("start_game", "0");
-        _match.AddPlayerAction("gain_xp", "1000");
-        _match.AddPlayerAction("level_up", "1");
-        _match.AddPlayerAction("gain_xp", "2000");
-        _match.AddPlayerAction("level_up", "2");
-        _match.AddPlayerAction("end_game", "2500");
-        yield return StartCoroutine(_match.SendPlayerActions((actions) => {
-            _log = actions;
+        Hashtable parameters = new Hashtable();
+        parameters.Add("date", TimeStamp.UnixTimeStampUTC());
+        yield return StartCoroutine(_match.SendAction("session_start", parameters, (actions) => {
+            _log = actions.ToString();
         }));
     }
 
