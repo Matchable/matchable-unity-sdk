@@ -15,6 +15,10 @@ namespace MatchableSDK
         private object _data;
         private string _text;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MatchableResponse"/> class.
+        /// </summary>
+        /// <param name="request">The WWW request.</param>
         public MatchableResponse(WWW request)
         {
             _text = System.Text.Encoding.UTF8.GetString(request.bytes);

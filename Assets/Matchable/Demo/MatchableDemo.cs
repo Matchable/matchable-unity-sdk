@@ -7,6 +7,9 @@ using System.Collections;
 
 using MatchableSDK;
 
+/// <summary>
+/// A simple demo app on how to integrate with the Matchable SDK
+/// </summary>
 public class MatchableDemo : MonoBehaviour
 {
     string _test = "";
@@ -50,6 +53,7 @@ public class MatchableDemo : MonoBehaviour
     /// Demo of call the the SendAction SDK method.
     /// Displays the response JSON string.
     /// </summary>
+    /// <returns></returns>
     public IEnumerator DemoSendAction()
     {
         _test = "Matchable.SendAction()";
@@ -64,6 +68,9 @@ public class MatchableDemo : MonoBehaviour
         }));
     }
 
+    /// <summary>
+    /// Generate the GUI.
+    /// </summary>
     void OnGUI()
     {
         GUIStyle style;
@@ -97,6 +104,5 @@ public class MatchableDemo : MonoBehaviour
         rect = new Rect(10, buttonHeight + 20, Screen.width - 20, Screen.height);
         string text = String.Format("{0}\n\n{1}", _test, _log);
         GUI.Box(rect, text);
-
     }
 }

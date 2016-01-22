@@ -7,25 +7,40 @@ using System.Collections.Generic;
 using UnityEngine.EventSystems;
 #endif
 
+/// <summary>
+/// MatchableSDK class
+/// </summary>
 namespace MatchableSDK
 {
     /// <summary>
-    ///  Provide methods to call Matchable API.
-    ///  For more information on integrating and using the Matchable SDK
-    ///  please visit our help site documentation at https://wiki.matchable.io/doku.php?id=info:api:v0.9
+    /// Provide methods to call Matchable API.
+    /// For more information on integrating and using the Matchable SDK
+    /// please visit our help site documentation at https://wiki.matchable.io/doku.php?id=info:api:v0.9
     /// </summary>
     public sealed class Matchable
     {
+        /// <summary>
+        /// The Matchable API scheme
+        /// </summary>
         private const string scheme = "https";
+
+        /// <summary>
+        /// The Matchable API URL
+        /// </summary>
         private const string url = "api.matchable.io";
+        
+        /// <summary>
+        /// The Matchable API version
+        /// </summary>
         private const string version = "v0.9";
 
         /// <summary>
         /// Build matchable.io API url for the given endpoint using the provided customer_key
-        /// ex: http://api.matchable.io/v0.9/advisor/<CUSTOMER_KEY>/
         /// </summary>
         /// <param name="endpoint">API endpoint name</param>
-        /// <returns>The complete URL string for the given endpoint</returns>
+        /// <returns>
+        /// The complete URL string for the given endpoint
+        /// </returns>
         private static string BuildCustomerEndpoint(string endpoint)
         {
             return String.Format("{0}://{1}/{2}/{3}/{4}/", scheme, url, version, endpoint, MatchableSettings.GetCustomerKey());
@@ -33,10 +48,11 @@ namespace MatchableSDK
 
         /// <summary>
         /// Build matchable.io API url for the given endpoint using the provided customer_key and player_id
-        /// ex: http://api.matchable.io/v0.9/advisor/<CUSTOMER_KEY>/<PLAYER_ID/
         /// </summary>
         /// <param name="endpoint">API endpoint name</param>
-        /// <returns>The complete URL string for the given endpoint</returns>
+        /// <returns>
+        /// The complete URL string for the given endpoint
+        /// </returns>
         private static string BuildPlayerEndpoint(string endpoint)
         {
             return String.Format(BuildCustomerEndpoint(endpoint) + "{0}/", MatchableSettings.GetPlayerId());
@@ -44,8 +60,9 @@ namespace MatchableSDK
 
         /// <summary>
         /// Retrieve all the statistics available for the default player
-        /// ex:http://api.matchable.io/v0.9/mplayers/<CUSTOMER_KEY>/<PLAYER_ID>/
         /// </summary>
+        /// <param name="callback">The callback.</param>
+        /// <returns></returns>
         public static IEnumerator GetStats(Action<MatchableResponse> callback)
         {
             WWW request = new WWW(BuildPlayerEndpoint("mplayers"));
@@ -75,6 +92,10 @@ namespace MatchableSDK
         /// Send a player action with the given type and parameters.
         /// Then executes the given callback when the response is received.
         /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <param name="callback">The callback.</param>
+        /// <returns></returns>
         public static IEnumerator SendAction(string type, object parameters, Action<MatchableResponse> callback)
         {
             if (type == null)

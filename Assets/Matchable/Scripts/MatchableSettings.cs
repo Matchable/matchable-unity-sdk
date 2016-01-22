@@ -7,8 +7,12 @@ using UnityEditor;
 
 namespace MatchableSDK {
 
-#if UNITY_EDITOR	
-	[InitializeOnLoad]
+#if UNITY_EDITOR
+    /// <summary>
+    /// Script holding Customer Key and Player Id settings
+    /// </summary>
+    /// <seealso cref="UnityEngine.ScriptableObject" />
+    [InitializeOnLoad]
 #endif
 	public class MatchableSettings : ScriptableObject
 	{
@@ -28,7 +32,13 @@ namespace MatchableSDK {
 
 	    private static MatchableSettings instance;
 
-	    static MatchableSettings Instance
+        /// <summary>
+        /// Gets the instance.
+        /// </summary>
+        /// <value>
+        /// The instance singleton.
+        /// </value>
+        static MatchableSettings Instance
 	    {
 	        get
 	        {
@@ -57,31 +67,53 @@ namespace MatchableSDK {
 	        }
 	    }
 
-	#if UNITY_EDITOR
-	    [MenuItem("Matchable/Edit Settings")]
+#if UNITY_EDITOR
+        /// <summary>
+        /// Edits this instance settings.
+        /// </summary>
+        [MenuItem("Matchable/Edit Settings")]
 	    public static void Edit()
 	    {
 	        Selection.activeObject = Instance;
 	    }
 
-	    [MenuItem("Matchable/SDK Documentation")]
+        /// <summary>
+        /// Opens the documentation.
+        /// </summary>
+        [MenuItem("Matchable/SDK Documentation")]
 	    public static void OpenDocumentation()
 	    {
 	        string url = "https://wiki.matchable.io/doku.php?id=info:api:v0.9";
 	        Application.OpenURL(url);
 	    }
-	#endif
+#endif
 
-	    #region App Settings
-		[SerializeField]
+        #region App Settings
+
+        /// <summary>
+        /// The customer key
+        /// </summary>
+        [SerializeField]
 		public string customerKey = customerKeyDefault;
-		[SerializeField]
+        
+        /// <summary>
+        /// The player identifier
+        /// </summary>
+        [SerializeField]
 		public string playerId = playerIdDefault;
-		[SerializeField]
-		public bool isLoggingEnabled = true;
-		
 
-		public void SetCustomerKey(string key)
+        /// <summary>
+        /// Define if logging is enabled
+        /// </summary>
+        [SerializeField]
+		public bool isLoggingEnabled = true;
+
+
+        /// <summary>
+        /// Sets the customer key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        public void SetCustomerKey(string key)
 	    {
 	        if (!Instance.customerKey.Equals(key))
 	        {
@@ -90,7 +122,11 @@ namespace MatchableSDK {
 	        }
 	    }
 
-		public static string GetCustomerKey()
+        /// <summary>
+        /// Gets the customer key.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetCustomerKey()
 		{
 			if(Instance.customerKey.Equals(customerKeyDefault))
 			{
@@ -101,6 +137,10 @@ namespace MatchableSDK {
 			return Instance.customerKey;
 		}
 
+        /// <summary>
+        /// Sets the player identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
         public void SetPlayerId(string id)
         {
             if (!Instance.playerId.Equals(id))
@@ -110,6 +150,10 @@ namespace MatchableSDK {
             }
         }
 
+        /// <summary>
+        /// Gets the player identifier
+        /// </summary>
+        /// <returns>Returns the game player id if set, if not returns the device unique identifier </returns>
         public static string GetPlayerId()
         {
             if (Instance.playerId.Equals(playerIdDefault) || Instance.playerId == "")
