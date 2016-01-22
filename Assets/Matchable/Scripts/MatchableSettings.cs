@@ -16,13 +16,13 @@ namespace MatchableSDK {
 	    const string mSettingsPath = "Matchable/Resources";
 	    const string mSettingsAssetExtension = ".asset";
 
-	    const string mCustomerKeyLabel = "MATCHABLE_CUSTOMER_KEY";
-	    const string mCustomerKeyDefault = "<CUSTOMER_KEY>";
+	    const string customerKeyLabel = "MATCHABLE_CUSTOMER_KEY";
+	    const string customerKeyDefault = "<CUSTOMER_KEY>";
 
-        const string mPlayerIdLabel = "MATCHABLE_PLAYER_ID";
-        const string mPlayerIdDefault = "<DEFAULT_DEVICE_ID>";
+        const string playerIdLabel = "MATCHABLE_PLAYER_ID";
+        const string playerIdDefault = "<DEFAULT_DEVICE_ID>";
 
-        const string exampleCredentialsWarning = "MATCHABLE: You are using the default Matchable Customer Key! You need to fill in your customer key to reach the API. If you need help, email us: support@matchable.io"; 
+        const string exampleCredentialsWarning = "MATCHABLE: You are using the default Matchable Customer Key! Go to Matchable > Edit Settings to fill in your customer key. If you need help, email us: support@matchable.io"; 
 
 	    private static bool credentialsWarning = false;
 
@@ -74,52 +74,51 @@ namespace MatchableSDK {
 
 	    #region App Settings
 		[SerializeField]
-		public string mCustomerKey = mCustomerKeyDefault;
+		public string customerKey = customerKeyDefault;
 		[SerializeField]
-		public string mPlayerId = mPlayerIdDefault;
+		public string playerId = playerIdDefault;
 		[SerializeField]
-		public bool isLoggingEnabled = false;
+		public bool isLoggingEnabled = true;
 		
 
 		public void SetCustomerKey(string key)
 	    {
-	        if (!Instance.mCustomerKey.Equals(key))
+	        if (!Instance.customerKey.Equals(key))
 	        {
-	            Instance.mCustomerKey = key;
+	            Instance.customerKey = key;
 	            DirtyEditor();
 	        }
 	    }
 
 		public static string GetCustomerKey()
 		{
-			if(Instance.mCustomerKey.Equals(mCustomerKeyDefault))
+			if(Instance.customerKey.Equals(customerKeyDefault))
 			{
 				CredentialsWarning();
-				return mCustomerKeyDefault;
+				return customerKeyDefault;
 			}
 
-			return Instance.mCustomerKey;
+			return Instance.customerKey;
 		}
 
         public void SetPlayerId(string id)
         {
-            if (!Instance.mPlayerId.Equals(id))
+            if (!Instance.playerId.Equals(id))
             {
-                Instance.mPlayerId = id;
+                Instance.playerId = id;
                 DirtyEditor();
             }
         }
 
         public static string GetPlayerId()
         {
-            if (Instance.mPlayerId.Equals(mPlayerIdDefault))
+            if (Instance.playerId.Equals(playerIdDefault) || Instance.playerId == "")
             {
-                CredentialsWarning();
                 //Use system unique identifier if no identifier is set
                 return SystemInfo.deviceUniqueIdentifier;
             }
             //Else use specified player id
-            return Instance.mPlayerId;
+            return Instance.playerId;
         }
 
         public static void enableLogging(bool enabled)
@@ -152,14 +151,14 @@ namespace MatchableSDK {
 
 		public static void resetSettings()
 		{	
-			if(!Instance.mCustomerKey.Equals(mCustomerKeyDefault))
+			if(!Instance.customerKey.Equals(customerKeyDefault))
 			{
-				Instance.SetCustomerKey(mCustomerKeyDefault);
+				Instance.SetCustomerKey(customerKeyDefault);
 			}
 			
-			if(!Instance.mPlayerId.Equals(mPlayerIdDefault))
+			if(!Instance.playerId.Equals(playerIdDefault))
 			{
-				Instance.SetPlayerId(mPlayerIdDefault);
+				Instance.SetPlayerId(playerIdDefault);
 			}
 		}
 

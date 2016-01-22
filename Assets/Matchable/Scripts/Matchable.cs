@@ -14,58 +14,45 @@ namespace MatchableSDK
     ///  For more information on integrating and using the Matchable SDK
     ///  please visit our help site documentation at https://wiki.matchable.io/doku.php?id=info:api:v0.9
     /// </summary>
-    public class Matchable
+    public sealed class Matchable
     {
-        const string scheme = "https";
-        const string url = "api.matchable.io";
-        const string version = "v0.9";
-
-        string _customerKey;
-        string _playerId;
-        
-        public Matchable(string customerKey, string playerId)
-        {
-            _customerKey = customerKey;
-            _playerId = playerId;
-        }
+        private const string scheme = "https";
+        private const string url = "api.matchable.io";
+        private const string version = "v0.9";
 
         /// <summary>
-        /// Build matchable.io API url for this specific endpoint using the provided customer_key
+        /// Build matchable.io API url for the given endpoint using the provided customer_key
         /// ex: http://api.matchable.io/v0.9/advisor/<CUSTOMER_KEY>/
         /// </summary>
         /// <param name="endpoint">API endpoint name</param>
         /// <returns>The complete URL string for the given endpoint</returns>
-        protected string BuildCustomerUrl(string endpoint)
+        private static string BuildCustomerEndpoint(string endpoint)
         {
-            return String.Format("{0}://{1}/{2}/{3}/{4}/", scheme, url, version, endpoint, _customerKey);
+            return String.Format("{0}://{1}/{2}/{3}/{4}/", scheme, url, version, endpoint, MatchableSettings.GetCustomerKey());
         }
 
         /// <summary>
-        /// Build matchable.io API url for this specific endpoint using the provided customer_key and player_id
+        /// Build matchable.io API url for the given endpoint using the provided customer_key and player_id
         /// ex: http://api.matchable.io/v0.9/advisor/<CUSTOMER_KEY>/<PLAYER_ID/
         /// </summary>
         /// <param name="endpoint">API endpoint name</param>
         /// <returns>The complete URL string for the given endpoint</returns>
-        protected string BuildPlayerUrl(string endpoint)
+        private static string BuildPlayerEndpoint(string endpoint)
         {
-            return String.Format(BuildCustomerUrl(endpoint) + "{0}/", _playerId);
+            return String.Format(BuildCustomerEndpoint(endpoint) + "{0}/", MatchableSettings.GetPlayerId());
         }
 
         /// <summary>
         /// Retrieve all the statistics available for the default player
         /// ex:http://api.matchable.io/v0.9/mplayers/<CUSTOMER_KEY>/<PLAYER_ID>/
         /// </summary>
-        public IEnumerator GetStats(Action<object> callback)
+        public static IEnumerator GetStats(Action<MatchableResponse> callback)
         {
-            WWW response = new WWW(BuildPlayerUrl("mplayers"));
+            WWW request = new WWW(BuildPlayerEndpoint("mplayers"));
+            yield return request;
+            MatchableResponse response = new MatchableResponse(request);
             yield return response;
-            string jsonData = "";
-            if (string.IsNullOrEmpty(response.error))
-            {
-                jsonData = System.Text.Encoding.UTF8.GetString(response.bytes);
-                yield return jsonData;
-                callback(MJSON.Deserialize(jsonData));
-            }
+            callback(response);
         }
 
         /// <summary>
@@ -74,10 +61,10 @@ namespace MatchableSDK
         /// </summary>
         /// <param name="type">Action type (ex: game_start)</param>
         /// <param name="parameters">Action parameters (JSON string)</param>
-        protected Hashtable CreateAction(string type, object parameters)
+        private static Hashtable CreateAction(string type, object parameters)
         {
             Hashtable action = new Hashtable();
-            action.Add("player_id", _playerId);
+            action.Add("player_id", MatchableSettings.GetPlayerId());
             action.Add("type", type);
             action.Add("parameters", parameters);
             action.Add("date", TimeStamp.UnixTimeStampUTC());
@@ -88,10 +75,11 @@ namespace MatchableSDK
         /// Send a player action with the given type and parameters.
         /// Then executes the given callback when the response is received.
         /// </summary>
-        public IEnumerator SendAction(string type, object parameters, Action<object> callback)
+        public static IEnumerator SendAction(string type, object parameters, Action<MatchableResponse> callback)
         {
-            if (type == null) {
-                Debug.LogError("SendAction(): type is mandatory");
+            if (type == null)
+            {
+                Debug.LogError("SendAction(): parameter 'type' is required");
                 yield return null;
             }
 
@@ -99,21 +87,20 @@ namespace MatchableSDK
             headers.Add("Content-Type", "application/json");
 
             Hashtable action = CreateAction(type, parameters);
-            
+
             // Simple hack to wrap the action inside a JSON array
             string data = "[" + MJSON.Serialize(action) + "]";
-            Debug.Log("Sent actions:" + data);
+            if (MatchableSettings.isLogging())
+            {
+                Debug.Log("Sent action:" + data);
+            }
             byte[] postData = System.Text.Encoding.ASCII.GetBytes(data.ToCharArray());
 
-            WWW response = new WWW(BuildCustomerUrl("mactions"), postData, headers);
+            WWW request = new WWW(BuildCustomerEndpoint("mactions"), postData, headers);
+            yield return request;
+            MatchableResponse response = new MatchableResponse(request);
             yield return response;
-            string jsonData = "";
-            if (string.IsNullOrEmpty(response.error))
-            {
-                jsonData = System.Text.Encoding.UTF8.GetString(response.bytes);
-                yield return jsonData;
-                callback(MJSON.Deserialize(jsonData));
-            }
+            callback(response);
         }
 
         /// <summary>
@@ -121,17 +108,13 @@ namespace MatchableSDK
         /// This action is obtained using a strategy based on the different scores computed by Matchable. 
         /// The strategies can be specifically developped for each customer in collaboration with Matchable's data scientists.
         /// </summary>
-        public IEnumerator GetAdvisor(Action<object> callback)
+        public static IEnumerator GetAdvisor(Action<MatchableResponse> callback)
         {
-            WWW response = new WWW(BuildPlayerUrl("advisor"));
+            WWW request = new WWW(BuildPlayerEndpoint("advisor"));
+            yield return request;
+            MatchableResponse response = new MatchableResponse(request);
             yield return response;
-            string jsonData = "";
-            if (string.IsNullOrEmpty(response.error))
-            {
-                jsonData = System.Text.Encoding.UTF8.GetString(response.bytes);
-                yield return jsonData;
-                callback(MJSON.Deserialize(jsonData));
-            }
+            callback(response);
         }
     }
 }

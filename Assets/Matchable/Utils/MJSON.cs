@@ -36,8 +36,8 @@ using System.Collections;
 using System.IO;
 using System.Text;
 
-namespace ChartboostSDK {
-    public static class CBJSON {
+namespace MatchableSDK {
+    public static class MJSON {
         /// <summary>
         /// Parses the string json into a value
         /// </summary>
