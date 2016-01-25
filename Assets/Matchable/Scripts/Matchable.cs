@@ -115,7 +115,7 @@ namespace MatchableSDK
             {
                 Debug.Log("Sent action:" + data);
             }
-            byte[] postData = System.Text.Encoding.ASCII.GetBytes(data.ToCharArray());
+            byte[] postData = AsciiEncoding.StringToAscii(data);
 
             WWW request = new WWW(BuildCustomerEndpoint("mactions"), postData, headers);
             yield return request;
