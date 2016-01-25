@@ -91,6 +91,15 @@ namespace MatchableSDK {
         #region App Settings
 
         /// <summary>
+        /// Define if the SDK plugin is enabled
+        /// True by default
+        /// Can be checked out in the settings 
+        /// (then you'll need to call Matchable.Init() directly in the code to set to true)
+        /// </summary>
+        [SerializeField]
+        public bool isPluginEnabled = true;
+
+        /// <summary>
         /// The customer key
         /// </summary>
         [SerializeField]
@@ -107,7 +116,6 @@ namespace MatchableSDK {
         /// </summary>
         [SerializeField]
 		public bool isLoggingEnabled = true;
-
 
         /// <summary>
         /// Sets the customer key.
@@ -165,25 +173,36 @@ namespace MatchableSDK {
             return Instance.playerId;
         }
 
-        public static void enableLogging(bool enabled)
+        public static void SetLogging(bool enabled)
 		{
 			Instance.isLoggingEnabled = enabled;
 			DirtyEditor();
 		}
 
-		public static bool isLogging()
+		public static bool IsLogging()
 		{
 			return Instance.isLoggingEnabled;
 		}
+        
+        public static void SetPluginEnabled(bool enabled)
+        {
+            Instance.isPluginEnabled = enabled;
+            DirtyEditor();
+        }
 
-	    private static void DirtyEditor()
-	    {
-	#if UNITY_EDITOR
-	        EditorUtility.SetDirty(Instance);
-	#endif
-	    }
+        public static bool IsPluginEnabled()
+        {
+            return Instance.isPluginEnabled;
+        }
 
-	    private static void CredentialsWarning()
+        private static void DirtyEditor()
+        {
+#if UNITY_EDITOR
+            EditorUtility.SetDirty(Instance);
+#endif
+        }
+
+        private static void CredentialsWarning()
 	    {
 	    	if(credentialsWarning == false) 
 	    	{

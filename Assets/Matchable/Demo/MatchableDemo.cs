@@ -73,6 +73,9 @@ public class MatchableDemo : MonoBehaviour
     /// </summary>
     void OnGUI()
     {
+        // Initialize the SDK (optional)
+        Matchable.Init();
+
         GUIStyle style;
         style = new GUIStyle(GUI.skin.box);
         style.wordWrap = true;

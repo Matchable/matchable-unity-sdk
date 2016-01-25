@@ -65,11 +65,14 @@ namespace MatchableSDK
         /// <returns></returns>
         public static IEnumerator GetStats(Action<MatchableResponse> callback)
         {
-            WWW request = new WWW(BuildPlayerEndpoint("mplayers"));
-            yield return request;
-            MatchableResponse response = new MatchableResponse(request);
-            yield return response;
-            callback(response);
+            if (MatchableSettings.IsPluginEnabled())
+            {
+                WWW request = new WWW(BuildPlayerEndpoint("mplayers"));
+                yield return request;
+                MatchableResponse response = new MatchableResponse(request);
+                yield return response;
+                callback(response);
+            }
         }
 
         /// <summary>
@@ -98,30 +101,33 @@ namespace MatchableSDK
         /// <returns></returns>
         public static IEnumerator SendAction(string type, object parameters, Action<MatchableResponse> callback)
         {
-            if (type == null)
+            if (MatchableSettings.IsPluginEnabled())
             {
-                Debug.LogError("SendAction(): parameter 'type' is required");
-                yield return null;
+                if (type == null)
+                {
+                    Debug.LogError("SendAction(): parameter 'type' is required");
+                    yield return null;
+                }
+
+                Dictionary<string, string> headers = new Dictionary<string, string>();
+                headers.Add("Content-Type", "application/json");
+
+                Hashtable action = CreateAction(type, parameters);
+
+                // Simple hack to wrap the action inside a JSON array
+                string data = "[" + MJSON.Serialize(action) + "]";
+                if (MatchableSettings.IsLogging())
+                {
+                    Debug.Log("Sent action:" + data);
+                }
+                byte[] postData = AsciiEncoding.StringToAscii(data);
+
+                WWW request = new WWW(BuildCustomerEndpoint("mactions"), postData, headers);
+                yield return request;
+                MatchableResponse response = new MatchableResponse(request);
+                yield return response;
+                callback(response);
             }
-
-            Dictionary<string, string> headers = new Dictionary<string, string>();
-            headers.Add("Content-Type", "application/json");
-
-            Hashtable action = CreateAction(type, parameters);
-
-            // Simple hack to wrap the action inside a JSON array
-            string data = "[" + MJSON.Serialize(action) + "]";
-            if (MatchableSettings.isLogging())
-            {
-                Debug.Log("Sent action:" + data);
-            }
-            byte[] postData = AsciiEncoding.StringToAscii(data);
-
-            WWW request = new WWW(BuildCustomerEndpoint("mactions"), postData, headers);
-            yield return request;
-            MatchableResponse response = new MatchableResponse(request);
-            yield return response;
-            callback(response);
         }
 
         /// <summary>
@@ -131,11 +137,32 @@ namespace MatchableSDK
         /// </summary>
         public static IEnumerator GetAdvisor(Action<MatchableResponse> callback)
         {
-            WWW request = new WWW(BuildPlayerEndpoint("advisor"));
-            yield return request;
-            MatchableResponse response = new MatchableResponse(request);
-            yield return response;
-            callback(response);
+            if (MatchableSettings.IsPluginEnabled())
+            {
+                WWW request = new WWW(BuildPlayerEndpoint("advisor"));
+                yield return request;
+                MatchableResponse response = new MatchableResponse(request);
+                yield return response;
+                callback(response);
+            }
+        }
+
+        /// <summary>
+        /// Initializes the SDK plugin. (optional)
+        /// Enabled by default in Matchable > EditSettings
+        /// </summary>
+        public static void Init()
+        {
+            MatchableSettings.SetPluginEnabled(true);
+        }
+
+        /// <summary>
+        /// Disable the SDK plugin.
+        /// Prevents all the method calls (useful for debuging other plugins)
+        /// </summary>
+        public static void Disable()
+        {
+            MatchableSettings.SetPluginEnabled(false);
         }
     }
 }
