@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-/// <summary>
-/// Matchable SDK
-/// </summary>
-namespace MatchableSDK
+﻿namespace MatchableSDK
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using Utils;
+
     /// <summary>
     /// Actions sent to the Matchable API
     /// </summary>
-    /// 
     class MatchableAction
     {
         /// <summary>
@@ -36,8 +33,13 @@ namespace MatchableSDK
         /// and system information about the device
         /// </summary>
         /// <param name="callback">The callback.</param>
-        /// <returns></returns>
-        public static IEnumerator StartSession(Action<MatchableResponse> callback)
+        /// <code>
+        /// StartCoroutine(MatchableAction.StartSession((response) =>
+        /// {
+        ///     Debug.Log(response.ToJsonString());
+        /// }));
+        /// </code>
+    public static IEnumerator StartSession(Action<MatchableResponse> callback)
         {
             Hashtable parameters = new Hashtable();
             parameters.Add("version", MatchableSettings.GetGameVersion());
@@ -49,7 +51,16 @@ namespace MatchableSDK
         /// </summary>
         /// <param name="parameters">The game specific parameters.</param>
         /// <param name="callback">The callback.</param>
-        /// <returns></returns>
+        /// <code>
+        /// Hashtable parameters = new Hashtable();
+        /// parameters.Add("game_type", "tactical");
+        /// parameters.Add("xp", "0");
+        /// parameters.Add("player_lvl", "1");
+        /// StartCoroutine(MatchableAction.StartGame((parameters, response) =>
+        /// {
+        ///     Debug.Log(response.ToJsonString());
+        /// }));
+        /// </code>
         public static IEnumerator StartGame(Hashtable parameters, Action<MatchableResponse> callback)
         {
             yield return Matchable.SendAction("start_game", parameters, callback);
@@ -60,7 +71,16 @@ namespace MatchableSDK
         /// </summary>
         /// <param name="parameters">The game result parameters.</param>
         /// <param name="callback">The callback.</param>
-        /// <returns></returns>
+        /// <code>
+        /// Hashtable parameters = new Hashtable();
+        /// parameters.Add("game_type", "tactical");
+        /// parameters.Add("xp", "0");
+        /// parameters.Add("player_lvl", "1");
+        /// StartCoroutine(MatchableAction.GameResult((parameters, response) =>
+        /// {
+        ///     Debug.Log(response.ToJsonString());
+        /// }));
+        /// </code>
         public static IEnumerator GameResult(Hashtable parameters, Action<MatchableResponse> callback)
         {
             yield return Matchable.SendAction("game_result", parameters, callback);
@@ -72,7 +92,12 @@ namespace MatchableSDK
         /// </summary>
         /// <param name="type">The type of retention action (ex: invite_friend, free_crystals, daily_reward).</param>
         /// <param name="callback">The callback.</param>
-        /// <returns></returns>
+        /// <code>
+        /// StartCoroutine(MatchableAction.Retention("invite_friend", response) =>
+        /// {
+        ///     Debug.Log(response.ToJsonString());
+        /// }));
+        /// </code>
         public static IEnumerator Retention(string type, Action<MatchableResponse> callback)
         {
             Hashtable parameters = new Hashtable();
@@ -82,12 +107,16 @@ namespace MatchableSDK
 
         /// <summary>
         /// Sends the conversion action with the given type
-        /// Sent each time a player does any conversion action and gain rewards 
-        /// (watching an ad, rating the app, inviting facebook friends, etc...)
+        /// Sent each time a player does any conversion action and gain rewards.
         /// </summary>
-        /// <param name="type">The type of conversion action (ex: invite_friend, free_crystals, daily_reward).</param>
+        /// <param name="type">The type of conversion action (ex: purchase).</param>
         /// <param name="callback">The callback.</param>
-        /// <returns></returns>
+        /// <code>
+        /// StartCoroutine(MatchableAction.Conversion("purchase", response) =>
+        /// {
+        ///     Debug.Log(response.ToJsonString());
+        /// }));
+        /// </code>
         public static IEnumerator Conversion(string type, Action<MatchableResponse> callback)
         {
             Hashtable parameters = new Hashtable();

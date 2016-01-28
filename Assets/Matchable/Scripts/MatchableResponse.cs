@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
-
-namespace MatchableSDK
+﻿namespace MatchableSDK
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using UnityEngine;
+    using Utils;
+
     /// <summary>
-    /// Class for a response from the Matchable API.
+    /// Response from the Matchable API.
     /// </summary>
     public class MatchableResponse
     {

@@ -1,17 +1,14 @@
-﻿using UnityEngine;
-using System;
-using System.Collections;
-using System.Runtime.InteropServices;
-using System.Collections.Generic;
-#if UNITY_4_6 || UNITY_5
-using UnityEngine.EventSystems;
-#endif
-
-/// <summary>
-/// MatchableSDK class
-/// </summary>
-namespace MatchableSDK
+﻿namespace MatchableSDK
 {
+    using UnityEngine;
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+#if UNITY_4_6 || UNITY_5
+    using UnityEngine.EventSystems;
+#endif
+    using Utils;
+
     /// <summary>
     /// Provide methods to call Matchable API.
     /// For more information on integrating and using the Matchable SDK
@@ -24,7 +21,12 @@ namespace MatchableSDK
         /// Retrieve all the statistics available for the default player
         /// </summary>
         /// <param name="callback">The callback.</param>
-        /// <returns></returns>
+        /// <code>
+        /// StartCoroutine(Matchable.GetStats((response) =>
+        /// {
+        ///     Debug.Log(response.ToJsonString());
+        /// }));
+        /// </code>
         public static IEnumerator GetStats(Action<MatchableResponse> callback)
         {
             if (MatchableSettings.IsPluginEnabled())
@@ -81,6 +83,12 @@ namespace MatchableSDK
         /// This action is obtained using a strategy based on the different scores computed by Matchable. 
         /// The strategies can be specifically developped for each customer in collaboration with Matchable's data scientists.
         /// </summary>
+        /// /// <code>
+        /// StartCoroutine(Matchable.GetAdvisor((response) =>
+        /// {
+        ///     Debug.Log(response.ToJsonString());
+        /// }));
+        /// </code>
         public static IEnumerator GetAdvisor(Action<MatchableResponse> callback)
         {
             if (MatchableSettings.IsPluginEnabled())

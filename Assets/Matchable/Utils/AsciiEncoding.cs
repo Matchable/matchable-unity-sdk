@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MatchableSDK
+namespace MatchableSDK.Utils
 {
     /// <summary>
     /// Custom ASCII encoder

@@ -36,7 +36,8 @@ using System.Collections;
 using System.IO;
 using System.Text;
 
-namespace MatchableSDK {
+namespace MatchableSDK.Utils
+{
     public static class MJSON {
         /// <summary>
         /// Parses the string json into a value

@@ -1,22 +1,22 @@
-using UnityEngine;
-using System.IO;
-using System.Collections;
-using System;
+namespace MatchableSDK
+{
+    using UnityEngine;
+    using System.IO;
+    using System.Collections;
+    using System;
 
 #if UNITY_EDITOR
-using UnityEditor;
+    using UnityEditor;
 #endif
 
-namespace MatchableSDK {
-
 #if UNITY_EDITOR
-    /// <summary>
-    /// Script holding Customer Key and Player Id settings
-    /// </summary>
-    /// <seealso cref="UnityEngine.ScriptableObject" />
     [InitializeOnLoad]
 #endif
-	public class MatchableSettings : ScriptableObject
+    /// <summary>
+    /// Matchable applications settings
+    /// </summary>
+    /// <seealso cref="UnityEngine.ScriptableObject" />
+    public class MatchableSettings : ScriptableObject
 	{
 		const string mSettingsAssetName = "MatchableSettings";
 	    const string mSettingsPath = "Matchable/Resources";
