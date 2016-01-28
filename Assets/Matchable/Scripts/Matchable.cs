@@ -76,22 +76,6 @@ namespace MatchableSDK
         }
 
         /// <summary>
-        /// Add a new action with the given type and parameters for the default player 
-        /// This action is saved locally and can be sent via the SendPlayerActions() method
-        /// </summary>
-        /// <param name="type">Action type (ex: game_start)</param>
-        /// <param name="parameters">Action parameters (JSON string)</param>
-        private static Hashtable CreateAction(string type, object parameters)
-        {
-            Hashtable action = new Hashtable();
-            action.Add("player_id", MatchableSettings.GetPlayerId());
-            action.Add("type", type);
-            action.Add("parameters", parameters);
-            action.Add("date", TimeStamp.UnixTimeStampUTC());
-            return action;
-        }
-
-        /// <summary>
         /// Send a player action with the given type and parameters.
         /// Then executes the given callback when the response is received.
         /// </summary>
@@ -112,7 +96,7 @@ namespace MatchableSDK
                 Dictionary<string, string> headers = new Dictionary<string, string>();
                 headers.Add("Content-Type", "application/json");
 
-                Hashtable action = CreateAction(type, parameters);
+                Hashtable action = MatchableAction.Create(type, parameters);
 
                 // Simple hack to wrap the action inside a JSON array
                 string data = "[" + MJSON.Serialize(action) + "]";
