@@ -4,8 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+/// <summary>
+/// Matchable SDK
+/// </summary>
 namespace MatchableSDK
 {
+    /// <summary>
+    /// Actions sent to the Matchable API
+    /// </summary>
     class MatchableAction
     {
         /// <summary>
@@ -22,6 +28,47 @@ namespace MatchableSDK
             action.Add("parameters", parameters);
             action.Add("date", TimeStamp.UnixTimeStampUTC());
             return action;
+        }
+
+        /// <summary>
+        /// Sends the "start_session" action with the game version provided in MatchableSettings or PlayerSettings
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        /// <returns></returns>
+        public static IEnumerator StartSession(Action<MatchableResponse> callback)
+        {
+            Hashtable parameters = new Hashtable();
+            parameters.Add("version", MatchableSettings.GetGameVersion());
+            yield return Matchable.SendAction("start_session", parameters, callback);
+        }
+
+        /// <summary>
+        /// Sends the retention action with the given type
+        /// Sent each time you give a bonus or booster to the player
+        /// </summary>
+        /// <param name="type">The type of retention action (ex: invite_friend, free_crystals, daily_reward).</param>
+        /// <param name="callback">The callback.</param>
+        /// <returns></returns>
+        public static IEnumerator Retention(string type, Action<MatchableResponse> callback)
+        {
+            Hashtable parameters = new Hashtable();
+            parameters.Add("retention_type", type);
+            yield return Matchable.SendAction("retention_action", parameters, callback);
+        }
+
+        /// <summary>
+        /// Sends the conversion action with the given type
+        /// Sent each time a player does any conversion action and gain rewards 
+        /// (watching an ad, rating the app, inviting facebook friends, etc...)
+        /// </summary>
+        /// <param name="type">The type of conversion action (ex: invite_friend, free_crystals, daily_reward).</param>
+        /// <param name="callback">The callback.</param>
+        /// <returns></returns>
+        public static IEnumerator Conversion(string type, Action<MatchableResponse> callback)
+        {
+            Hashtable parameters = new Hashtable();
+            parameters.Add("conversion_type", type);
+            yield return Matchable.SendAction("conversion_action", parameters, callback);
         }
     }
 }

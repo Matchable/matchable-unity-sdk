@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.IO;
+using System.Collections;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -115,13 +116,19 @@ namespace MatchableSDK {
         /// The game version
         /// </summary>
         [SerializeField]
-        public string gameVersion = PlayerSettings.bundleVersion;
+        #if UNITY_EDITOR
+            public string gameVersion = PlayerSettings.bundleVersion;
+        #else
+            public string gameVersion;
+        #endif
 
         /// <summary>
         /// Define if logging is enabled
         /// </summary>
         [SerializeField]
 		public bool isLoggingEnabled = true;
+
+        public ArrayList cachedActions;
 
         /// <summary>
         /// Sets the customer key.

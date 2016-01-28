@@ -18,10 +18,10 @@ namespace MatchableSDK
         /// <summary>
         /// Initializes a new instance of the <see cref="MatchableResponse"/> class.
         /// </summary>
-        /// <param name="request">The WWW request.</param>
+        /// <param name="request">The original matchable request.</param>
         public MatchableResponse(WWW request)
         {
-            _text = System.Text.Encoding.UTF8.GetString(request.bytes);
+            _text = request.text;
             _data = MJSON.Deserialize(_text);
         }
 

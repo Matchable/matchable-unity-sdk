@@ -28,7 +28,7 @@ namespace MatchableSDK
         /// The Matchable API URL
         /// </summary>
         private const string url = "api.matchable.io";
-        
+
         /// <summary>
         /// The Matchable API version
         /// </summary>
