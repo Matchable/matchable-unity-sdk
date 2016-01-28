@@ -19,44 +19,6 @@ namespace MatchableSDK
     /// </summary>
     public sealed class Matchable
     {
-        /// <summary>
-        /// The Matchable API scheme
-        /// </summary>
-        private const string scheme = "https";
-
-        /// <summary>
-        /// The Matchable API URL
-        /// </summary>
-        private const string url = "api.matchable.io";
-
-        /// <summary>
-        /// The Matchable API version
-        /// </summary>
-        private const string version = "v0.9";
-
-        /// <summary>
-        /// Build matchable.io API url for the given endpoint using the provided customer_key
-        /// </summary>
-        /// <param name="endpoint">API endpoint name</param>
-        /// <returns>
-        /// The complete URL string for the given endpoint
-        /// </returns>
-        private static string BuildCustomerEndpoint(string endpoint)
-        {
-            return String.Format("{0}://{1}/{2}/{3}/{4}/", scheme, url, version, endpoint, MatchableSettings.GetCustomerKey());
-        }
-
-        /// <summary>
-        /// Build matchable.io API url for the given endpoint using the provided customer_key and player_id
-        /// </summary>
-        /// <param name="endpoint">API endpoint name</param>
-        /// <returns>
-        /// The complete URL string for the given endpoint
-        /// </returns>
-        private static string BuildPlayerEndpoint(string endpoint)
-        {
-            return String.Format(BuildCustomerEndpoint(endpoint) + "{0}/", MatchableSettings.GetPlayerId());
-        }
 
         /// <summary>
         /// Retrieve all the statistics available for the default player
@@ -67,7 +29,7 @@ namespace MatchableSDK
         {
             if (MatchableSettings.IsPluginEnabled())
             {
-                WWW request = new WWW(BuildPlayerEndpoint("mplayers"));
+                WWW request = new WWW(MatchableSettings.GetPlayerEndpoint());
                 yield return request;
                 MatchableResponse response = new MatchableResponse(request);
                 yield return response;
@@ -100,13 +62,13 @@ namespace MatchableSDK
 
                 // Simple hack to wrap the action inside a JSON array
                 string data = "[" + MJSON.Serialize(action) + "]";
-                if (MatchableSettings.IsLogging())
+                if (MatchableSettings.IsLoggingEnabled())
                 {
                     Debug.Log("Sent action:" + data);
                 }
                 byte[] postData = AsciiEncoding.StringToAscii(data);
 
-                WWW request = new WWW(BuildCustomerEndpoint("mactions"), postData, headers);
+                WWW request = new WWW(MatchableSettings.GetActionsEndpoint(), postData, headers);
                 yield return request;
                 MatchableResponse response = new MatchableResponse(request);
                 yield return response;
@@ -123,7 +85,7 @@ namespace MatchableSDK
         {
             if (MatchableSettings.IsPluginEnabled())
             {
-                WWW request = new WWW(BuildPlayerEndpoint("advisor"));
+                WWW request = new WWW(MatchableSettings.GetAdvisorEndpoint());
                 yield return request;
                 MatchableResponse response = new MatchableResponse(request);
                 yield return response;

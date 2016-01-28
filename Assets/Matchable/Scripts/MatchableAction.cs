@@ -12,6 +12,7 @@ namespace MatchableSDK
     /// <summary>
     /// Actions sent to the Matchable API
     /// </summary>
+    /// 
     class MatchableAction
     {
         /// <summary>
@@ -32,6 +33,7 @@ namespace MatchableSDK
 
         /// <summary>
         /// Sends the "start_session" action with the game version provided in MatchableSettings or PlayerSettings
+        /// and system information about the device
         /// </summary>
         /// <param name="callback">The callback.</param>
         /// <returns></returns>
@@ -40,6 +42,28 @@ namespace MatchableSDK
             Hashtable parameters = new Hashtable();
             parameters.Add("version", MatchableSettings.GetGameVersion());
             yield return Matchable.SendAction("start_session", parameters, callback);
+        }
+
+        /// <summary>
+        /// Sends the "start_game" action with the provided parameters
+        /// </summary>
+        /// <param name="parameters">The game specific parameters.</param>
+        /// <param name="callback">The callback.</param>
+        /// <returns></returns>
+        public static IEnumerator StartGame(Hashtable parameters, Action<MatchableResponse> callback)
+        {
+            yield return Matchable.SendAction("start_game", parameters, callback);
+        }
+
+        /// <summary>
+        /// Sends the "game_result" action with the provided parameters
+        /// </summary>
+        /// <param name="parameters">The game result parameters.</param>
+        /// <param name="callback">The callback.</param>
+        /// <returns></returns>
+        public static IEnumerator GameResult(Hashtable parameters, Action<MatchableResponse> callback)
+        {
+            yield return Matchable.SendAction("game_result", parameters, callback);
         }
 
         /// <summary>

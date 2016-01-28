@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.IO;
 using System.Collections;
+using System;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -91,6 +92,21 @@ namespace MatchableSDK {
 
         #region App Settings
 
+        /// <summary>
+        /// The API URL
+        /// </summary>
+        public static string apiUrl = "https://api.matchable.io";
+
+        /// <summary>
+        /// The API version
+        /// </summary>
+        public static string apiVersion = "v0.9";
+
+        /// <summary>
+        /// The SDK version
+        /// </summary>
+        public static string sdkVersion = "1.1"; 
+        
         /// <summary>
         /// Define if the SDK plugin is enabled
         /// True by default
@@ -196,6 +212,57 @@ namespace MatchableSDK {
         }
 
         /// <summary>
+        /// Build matchable.io API url for the given endpoint using the provided customer_key
+        /// </summary>
+        /// <param name="endpoint">API endpoint name</param>
+        /// <returns>
+        /// The complete URL string for the given endpoint
+        /// </returns>
+        private static string GetCustomerEndpoint(string endpoint)
+        {
+            return String.Format("{0}/{1}/{2}/{3}/", apiUrl, apiVersion, endpoint, GetCustomerKey());
+        }
+        
+        /// <summary>
+        /// Build matchable.io API url for the given endpoint using the provided customer_key and player_id
+        /// </summary>
+        /// <param name="endpoint">API endpoint name</param>
+        /// <returns>
+        /// The complete URL string for the given endpoint
+        /// </returns>
+        private static string GetPlayerEndpoint(string endpoint)
+        {
+            return String.Format(GetCustomerEndpoint(endpoint) + "{0}/", MatchableSettings.GetPlayerId());
+        }
+
+        /// <summary>
+        /// Gets the player endpoint.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetPlayerEndpoint()
+        {
+            return GetPlayerEndpoint("mplayers");
+        }
+
+        /// <summary>
+        /// Gets the actions endpoint.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetActionsEndpoint()
+        {
+            return GetCustomerEndpoint("mactions");
+        }
+
+        /// <summary>
+        /// Gets the advisor endpoint.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetAdvisorEndpoint()
+        {
+            return GetPlayerEndpoint("advisor");
+        }
+
+        /// <summary>
         /// Sets the game version.
         /// </summary>
         /// <param name="version">The version.</param>
@@ -208,13 +275,13 @@ namespace MatchableSDK {
             }
         }
 
-        public static void SetLogging(bool enabled)
+        public static void SetLoggingEnabled(bool enabled)
 		{
 			Instance.isLoggingEnabled = enabled;
 			DirtyEditor();
 		}
 
-		public static bool IsLogging()
+		public static bool IsLoggingEnabled()
 		{
 			return Instance.isLoggingEnabled;
 		}
