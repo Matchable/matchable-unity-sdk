@@ -112,6 +112,12 @@ namespace MatchableSDK {
 		public string playerId = playerIdDefault;
 
         /// <summary>
+        /// The game version
+        /// </summary>
+        [SerializeField]
+        public string gameVersion = PlayerSettings.bundleVersion;
+
+        /// <summary>
         /// Define if logging is enabled
         /// </summary>
         [SerializeField]
@@ -171,6 +177,28 @@ namespace MatchableSDK {
             }
             //Else use specified player id
             return Instance.playerId;
+        }
+
+        /// <summary>
+        /// Gets the game version.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetGameVersion()
+        {
+            return Instance.gameVersion;
+        }
+
+        /// <summary>
+        /// Sets the game version.
+        /// </summary>
+        /// <param name="version">The version.</param>
+        public void SetGameVersion(string version)
+        {
+            if (!Instance.gameVersion.Equals(version))
+            {
+                Instance.gameVersion = version;
+                DirtyEditor();
+            }
         }
 
         public static void SetLogging(bool enabled)
