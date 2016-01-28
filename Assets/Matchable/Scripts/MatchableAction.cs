@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using UnityEngine;
     using Utils;
 
     /// <summary>
@@ -39,10 +40,17 @@
         ///     Debug.Log(response.ToJsonString());
         /// }));
         /// </code>
-    public static IEnumerator StartSession(Action<MatchableResponse> callback)
+        public static IEnumerator StartSession(Action<MatchableResponse> callback)
         {
+            Hashtable systemInfo = new Hashtable();
+            systemInfo.Add("device_model", SystemInfo.deviceModel);
+            systemInfo.Add("device_type", SystemInfo.deviceType);
+            systemInfo.Add("operating_system", SystemInfo.operatingSystem);
+
             Hashtable parameters = new Hashtable();
             parameters.Add("version", MatchableSettings.GetGameVersion());
+            parameters.Add("system_info", systemInfo);
+
             yield return Matchable.SendAction("start_session", parameters, callback);
         }
 

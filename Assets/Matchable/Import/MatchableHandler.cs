@@ -37,6 +37,7 @@
 
         /// <summary>
         /// Starts this instance.
+        /// Sends the StartSession action each time the game runs
         /// </summary>
         void Start()
         {
