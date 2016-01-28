@@ -82,8 +82,9 @@
         /// <code>
         /// Hashtable parameters = new Hashtable();
         /// parameters.Add("game_type", "tactical");
-        /// parameters.Add("xp", "0");
-        /// parameters.Add("player_lvl", "1");
+        /// parameters.Add("xp", 0);
+        /// parameters.Add("player_lvl", 1);
+        /// parameters.Add("status", 1);
         /// StartCoroutine(MatchableAction.GameResult((parameters, response) =>
         /// {
         ///     Debug.Log(response.ToJsonString());
