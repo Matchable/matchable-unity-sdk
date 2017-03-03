@@ -24,8 +24,9 @@
             Hashtable action = new Hashtable();
             action.Add("player_id", MatchableSettings.GetPlayerId());
             action.Add("type", type);
-            action.Add("parameters", parameters);
-            action.Add("date", TimeStamp.UnixTimeStampUTC());
+			action.Add("parameters", parameters);
+			action.Add("date", TimeStamp.UnixTimeStampUTC());
+			//action.Add("version", MatchableSettings.GetGameVersion());
             return action;
         }
 
@@ -42,14 +43,15 @@
         /// </code>
         public static IEnumerator StartSession(Action<MatchableResponse> callback)
         {
+			/*
             Hashtable systemInfo = new Hashtable();
             systemInfo.Add("device_model", SystemInfo.deviceModel);
             systemInfo.Add("device_type", SystemInfo.deviceType);
             systemInfo.Add("operating_system", SystemInfo.operatingSystem);
-
+			*/
             Hashtable parameters = new Hashtable();
             parameters.Add("version", MatchableSettings.GetGameVersion());
-            parameters.Add("system_info", systemInfo);
+            //parameters.Add("system_info", systemInfo);
 
             yield return Matchable.SendAction("start_session", parameters, callback);
         }

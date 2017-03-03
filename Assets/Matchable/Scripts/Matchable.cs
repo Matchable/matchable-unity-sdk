@@ -49,6 +49,8 @@
         /// <returns></returns>
         public static IEnumerator SendAction(string type, object parameters, Action<MatchableResponse> callback)
         {
+			Debug.LogError("SendAction(): parameter 'type' is required");
+
             if (MatchableSettings.IsPluginEnabled())
             {
                 if (type == null)
@@ -91,7 +93,7 @@
         /// </code>
         public static IEnumerator GetAdvisor(Action<MatchableResponse> callback)
         {
-            if (MatchableSettings.IsPluginEnabled())
+			if (MatchableSettings.IsPluginEnabled())
             {
                 WWW request = new WWW(MatchableSettings.GetAdvisorEndpoint());
                 yield return request;

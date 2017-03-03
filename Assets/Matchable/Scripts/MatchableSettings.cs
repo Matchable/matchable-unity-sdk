@@ -20,15 +20,18 @@ namespace MatchableSDK
 	{
 		const string mSettingsAssetName = "MatchableSettings";
 	    const string mSettingsPath = "Matchable/Resources";
-	    const string mSettingsAssetExtension = ".asset";
-
-	    const string customerKeyLabel = "MATCHABLE_CUSTOMER_KEY";
-	    const string customerKeyDefault = "<CUSTOMER_KEY>";
+		const string mSettingsAssetExtension = ".asset";
+		
+		const string appKeyLabel = "MATCHABLE_APP_KEY";
+		const string appKeyDefault = "<APP_KEY>";
+		
+		const string appSecretLabel = "MATCHABLE_APP_SECRET";
+		const string appSecretDefault = "<APP_SECRET>";
 
         const string playerIdLabel = "MATCHABLE_PLAYER_ID";
         const string playerIdDefault = "<DEFAULT_DEVICE_ID>";
 
-        const string exampleCredentialsWarning = "MATCHABLE: You are using the default Matchable Customer Key! Go to Matchable > Edit Settings to fill in your customer key. If you need help, email us: support@matchable.io"; 
+        const string exampleCredentialsWarning = "MATCHABLE: You are using the default Matchable Customer Key! Go to Matchable > Edit Settings to fill in your application key and secret. If you need help, email us: support@matchable.io"; 
 
 	    private static bool credentialsWarning = false;
 
@@ -105,7 +108,7 @@ namespace MatchableSDK
         /// <summary>
         /// The SDK version
         /// </summary>
-        public static string sdkVersion = "1.1"; 
+        public static string sdkVersion = "1.2"; 
         
         /// <summary>
         /// Define if the SDK plugin is enabled
@@ -117,10 +120,16 @@ namespace MatchableSDK
         public bool isPluginEnabled = true;
 
         /// <summary>
-        /// The customer key
+        /// The application key
         /// </summary>
         [SerializeField]
-		public string customerKey = customerKeyDefault;
+		public string appKey = appKeyDefault;
+
+		/// <summary>
+		/// The application secret
+		/// </summary>
+		[SerializeField]
+		public string appSecret = appSecretDefault;
         
         /// <summary>
         /// The player identifier
@@ -135,7 +144,7 @@ namespace MatchableSDK
         #if UNITY_EDITOR
             public string gameVersion = PlayerSettings.bundleVersion;
         #else
-            public string gameVersion;
+			public string gameVersion; 
         #endif
 
         /// <summary>
@@ -147,31 +156,31 @@ namespace MatchableSDK
         public ArrayList cachedActions;
 
         /// <summary>
-        /// Sets the customer key.
+        /// Sets the application key.
         /// </summary>
-        /// <param name="key">The key.</param>
-        public void SetCustomerKey(string key)
+        /// <param name="key">The application key.</param>
+        public void SetAppKey(string key)
 	    {
-	        if (!Instance.customerKey.Equals(key))
+	        if (!Instance.appKey.Equals(key))
 	        {
-	            Instance.customerKey = key;
+	            Instance.appKey = key;
 	            DirtyEditor();
 	        }
 	    }
 
         /// <summary>
-        /// Gets the customer key.
+        /// Gets the application key.
         /// </summary>
         /// <returns></returns>
-        public static string GetCustomerKey()
+        public static string GetAppKey()
 		{
-			if(Instance.customerKey.Equals(customerKeyDefault))
+			if(Instance.appKey.Equals(appKeyDefault))
 			{
 				CredentialsWarning();
-				return customerKeyDefault;
+				return appKeyDefault;
 			}
 
-			return Instance.customerKey;
+			return Instance.appKey;
 		}
 
         /// <summary>
@@ -220,7 +229,7 @@ namespace MatchableSDK
         /// </returns>
         private static string GetCustomerEndpoint(string endpoint)
         {
-            return String.Format("{0}/{1}/{2}/{3}/", apiUrl, apiVersion, endpoint, GetCustomerKey());
+            return String.Format("{0}/{1}/{2}/{3}/", apiUrl, apiVersion, endpoint, GetAppKey());
         }
         
         /// <summary>
@@ -266,6 +275,7 @@ namespace MatchableSDK
         /// Sets the game version.
         /// </summary>
         /// <param name="version">The version.</param>
+		///
         public void SetGameVersion(string version)
         {
             if (!Instance.gameVersion.Equals(version))
@@ -316,9 +326,9 @@ namespace MatchableSDK
 
 		public static void resetSettings()
 		{	
-			if(!Instance.customerKey.Equals(customerKeyDefault))
+			if(!Instance.appKey.Equals(appKeyDefault))
 			{
-				Instance.SetCustomerKey(customerKeyDefault);
+				Instance.SetAppKey(appKeyDefault);
 			}
 			
 			if(!Instance.playerId.Equals(playerIdDefault))

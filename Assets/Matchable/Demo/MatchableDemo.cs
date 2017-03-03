@@ -89,7 +89,7 @@ namespace MatchableSDK.Demo
             parameters.Add("player_lvl", 1);
             parameters.Add("status", 1);
             // Call any MatchableAction asynchronously as a Coroutine
-            yield return StartCoroutine(MatchableAction.StartGame(parameters, (response) =>
+			yield return StartCoroutine(Matchable.SendAction("start_game", parameters, (response) =>
             {
             // Handle the API response the way you want
             _log = response.ToJsonString();

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace MatchableSDK
 {
@@ -32,7 +33,10 @@ namespace MatchableSDK
 
         void Start()
         {
-            StartCoroutine(MatchableAction.StartSession((response) =>
+			Hashtable parameters = new Hashtable();
+			parameters.Add("version", MatchableSettings.GetGameVersion());
+
+			StartCoroutine(Matchable.SendAction("start_session", parameters, (response) =>
             {
                 if (MatchableSettings.IsLoggingEnabled())
                 {
