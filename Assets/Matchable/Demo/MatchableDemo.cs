@@ -8,6 +8,7 @@ namespace MatchableSDK.Demo
     using System.Text;
     using System.Collections;
 
+    /// This is the import needed to use the Matchable SDK
     using MatchableSDK;
 
     /// <summary>
@@ -19,43 +20,21 @@ namespace MatchableSDK.Demo
         string _log = "";
 
         /// <summary>
-        /// Demo of call the the GetStats SDK method.
+        /// Demo of call the the GetRecommendations SDK method.
         /// Displays the response JSON string.
         /// </summary>
         /// <code>        
-        ///    StartCoroutine(Matchable.GetStats((response) =>
+        ///    StartCoroutine(Matchable.GetRecommendations((response) =>
         ///    {
         ///         _log = response.ToJsonString();
         ///    }));
         /// </code>
-        public IEnumerator DemoGetStats()
+        public IEnumerator DemoGetRecommendations()
         {
-            _test = "Matchable.GetStats()";
-            _log = "Waiting for response...";
-            // Call GetStats asynchronously as a Coroutine
-            yield return StartCoroutine(Matchable.GetStats((response) =>
-            {
-            // Handle the API response the way you want
-            _log = response.ToJsonString();
-            }));
-        }
-
-        /// <summary>
-        /// Demo of call the the GetAdvisor SDK method.
-        /// Displays the response JSON string.
-        /// </summary>
-        /// <code>        
-        ///    StartCoroutine(Matchable.GetAdvisor((response) =>
-        ///    {
-        ///         _log = response.ToJsonString();
-        ///    }));
-        /// </code>
-        public IEnumerator DemoGetAdvisor()
-        {
-            _test = "Matchable.GetAdvisor()";
+            _test = "Matchable.GetRecommendations()";
             _log = "Waiting for response...";
             // Call GetAdvisor asynchronously as a Coroutine
-            yield return StartCoroutine(Matchable.GetAdvisor((response) =>
+            yield return StartCoroutine(Matchable.GetRecommendations((response) =>
             {
             // Handle the API response the way you want
             _log = response.ToJsonString();
@@ -89,7 +68,7 @@ namespace MatchableSDK.Demo
             parameters.Add("player_lvl", 1);
             parameters.Add("status", 1);
             // Call any MatchableAction asynchronously as a Coroutine
-			yield return StartCoroutine(Matchable.SendAction("start_game", parameters, (response) =>
+            yield return StartCoroutine(Matchable.SendAction("sample_action_type", parameters, (response) =>
             {
             // Handle the API response the way you want
             _log = response.ToJsonString();
@@ -111,22 +90,16 @@ namespace MatchableSDK.Demo
             style.normal.textColor = Color.white;
             GUI.skin.box = style;
 
-            int buttonSize = Screen.width / 3 - 10;
+            int buttonSize = Screen.width / 2 - 10;
             int buttonHeight = 50;
 
             Rect rect = new Rect(10, 10, buttonSize, buttonHeight);
-            if (GUI.Button(rect, "GetStats()"))
+            if (GUI.Button(rect, "GetRecommendations()"))
             {
-                StartCoroutine(DemoGetStats());
+                StartCoroutine(DemoGetRecommendations());
             }
 
             rect = new Rect(buttonSize + 10, 10, buttonSize, buttonHeight);
-            if (GUI.Button(rect, "GetAdvisor()"))
-            {
-                StartCoroutine(DemoGetAdvisor());
-            }
-
-            rect = new Rect(2 * buttonSize + 10, 10, buttonSize, buttonHeight);
             if (GUI.Button(rect, "SendAction()"))
             {
                 StartCoroutine(DemoSendAction());

@@ -20,18 +20,15 @@ namespace MatchableSDK
 	{
 		const string mSettingsAssetName = "MatchableSettings";
 	    const string mSettingsPath = "Matchable/Resources";
-		const string mSettingsAssetExtension = ".asset";
-		
-		const string appKeyLabel = "MATCHABLE_APP_KEY";
-		const string appKeyDefault = "<APP_KEY>";
-		
-		const string appSecretLabel = "MATCHABLE_APP_SECRET";
-		const string appSecretDefault = "<APP_SECRET>";
+	    const string mSettingsAssetExtension = ".asset";
+
+	    const string appKeyLabel = "MATCHABLE_APP_KEY";
+	    const string appKeyDefault = "<APP_KEY>";
 
         const string playerIdLabel = "MATCHABLE_PLAYER_ID";
         const string playerIdDefault = "<DEFAULT_DEVICE_ID>";
 
-        const string exampleCredentialsWarning = "MATCHABLE: You are using the default Matchable Customer Key! Go to Matchable > Edit Settings to fill in your application key and secret. If you need help, email us: support@matchable.io"; 
+        const string exampleCredentialsWarning = "MATCHABLE: You are using the default Matchable App Key! Go to Matchable > Edit Settings to fill in your customer key. If you need help, email us: support@matchable.io"; 
 
 	    private static bool credentialsWarning = false;
 
@@ -88,7 +85,7 @@ namespace MatchableSDK
         [MenuItem("Matchable/SDK Documentation")]
 	    public static void OpenDocumentation()
 	    {
-	        string url = "https://wiki.matchable.io/doku.php?id=info:api:v0.9";
+	        string url = "https://api.matchable.io/v1.0/doc/#";
 	        Application.OpenURL(url);
 	    }
 #endif
@@ -103,12 +100,12 @@ namespace MatchableSDK
         /// <summary>
         /// The API version
         /// </summary>
-        public static string apiVersion = "v0.9";
+        public static string apiVersion = "v1.0";
 
         /// <summary>
         /// The SDK version
         /// </summary>
-        public static string sdkVersion = "1.2"; 
+        public static string sdkVersion = "2.0"; 
         
         /// <summary>
         /// Define if the SDK plugin is enabled
@@ -124,12 +121,6 @@ namespace MatchableSDK
         /// </summary>
         [SerializeField]
 		public string appKey = appKeyDefault;
-
-		/// <summary>
-		/// The application secret
-		/// </summary>
-		[SerializeField]
-		public string appSecret = appSecretDefault;
         
         /// <summary>
         /// The player identifier
@@ -144,7 +135,7 @@ namespace MatchableSDK
         #if UNITY_EDITOR
             public string gameVersion = PlayerSettings.bundleVersion;
         #else
-			public string gameVersion; 
+            public string gameVersion;
         #endif
 
         /// <summary>
@@ -158,7 +149,7 @@ namespace MatchableSDK
         /// <summary>
         /// Sets the application key.
         /// </summary>
-        /// <param name="key">The application key.</param>
+        /// <param name="key">The key.</param>
         public void SetAppKey(string key)
 	    {
 	        if (!Instance.appKey.Equals(key))
@@ -219,18 +210,6 @@ namespace MatchableSDK
         {
             return Instance.gameVersion;
         }
-
-        /// <summary>
-        /// Build matchable.io API url for the given endpoint using the provided customer_key
-        /// </summary>
-        /// <param name="endpoint">API endpoint name</param>
-        /// <returns>
-        /// The complete URL string for the given endpoint
-        /// </returns>
-        private static string GetCustomerEndpoint(string endpoint)
-        {
-            return String.Format("{0}/{1}/{2}/{3}/", apiUrl, apiVersion, endpoint, GetAppKey());
-        }
         
         /// <summary>
         /// Build matchable.io API url for the given endpoint using the provided customer_key and player_id
@@ -239,18 +218,9 @@ namespace MatchableSDK
         /// <returns>
         /// The complete URL string for the given endpoint
         /// </returns>
-        private static string GetPlayerEndpoint(string endpoint)
+        private static string GetUserEndpoint(string endpoint)
         {
-            return String.Format(GetCustomerEndpoint(endpoint) + "{0}/", MatchableSettings.GetPlayerId());
-        }
-
-        /// <summary>
-        /// Gets the player endpoint.
-        /// </summary>
-        /// <returns></returns>
-        public static string GetPlayerEndpoint()
-        {
-            return GetPlayerEndpoint("mplayers");
+            return String.Format("{0}/{1}/users/{2}/{3}", apiUrl, apiVersion, MatchableSettings.GetPlayerId(), endpoint);
         }
 
         /// <summary>
@@ -259,23 +229,22 @@ namespace MatchableSDK
         /// <returns></returns>
         public static string GetActionsEndpoint()
         {
-            return GetCustomerEndpoint("mactions");
+            return GetUserEndpoint("actions");
         }
 
         /// <summary>
-        /// Gets the advisor endpoint.
+        /// Gets the recommendations endpoint.
         /// </summary>
         /// <returns></returns>
-        public static string GetAdvisorEndpoint()
+        public static string GetRecommendationsEndpoint()
         {
-            return GetPlayerEndpoint("advisor");
+            return GetUserEndpoint("recoms");
         }
 
         /// <summary>
         /// Sets the game version.
         /// </summary>
         /// <param name="version">The version.</param>
-		///
         public void SetGameVersion(string version)
         {
             if (!Instance.gameVersion.Equals(version))
