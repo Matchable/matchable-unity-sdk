@@ -133,7 +133,7 @@ namespace MatchableSDK
         /// </summary>
         [SerializeField]
         #if UNITY_EDITOR
-            public string gameVersion = PlayerSettings.bundleVersion;
+            public string gameVersion;
         #else
             public string gameVersion;
         #endif
@@ -145,6 +145,16 @@ namespace MatchableSDK
 		public bool isLoggingEnabled = true;
 
         public ArrayList cachedActions;
+
+
+        
+
+            void OnEnable()
+        {
+            #if UNITY_EDITOR
+                gameVersion = PlayerSettings.bundleVersion;
+            #endif
+        }
 
         /// <summary>
         /// Sets the application key.
