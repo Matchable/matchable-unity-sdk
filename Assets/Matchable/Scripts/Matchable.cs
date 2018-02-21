@@ -120,6 +120,11 @@
         public static Hashtable Create(string type, object parameters)
         {
             Hashtable action = new Hashtable();
+            //adding device info
+            action.Add("device_model", SystemInfo.deviceModel);
+            action.Add("device_type", SystemInfo.deviceType);
+            action.Add("operating_system", SystemInfo.operatingSystem);
+
             action.Add("version", MatchableSettings.GetGameVersion());
             action.Add("type", type);
             action.Add("parameters", parameters);
@@ -143,7 +148,13 @@
         public MatchableResponse(WWW request)
         {
             _text = request.text;
-            _data = MJSON.Deserialize(_text);
+            try
+            {
+                _data = MJSON.Deserialize(_text);
+            } catch (OverflowException e) {
+                Debug.Log("Trying to deserialize empty json object");
+                _data = null;
+            }
         }
 
         /// <summary>
@@ -170,7 +181,7 @@
         /// <returns>The value matching the key</returns>
         public object GetValue(string key)
         {
-            return GetData()[key];
+            return GetData()!=null? GetData()[key]:null;
         }
     }
 }
