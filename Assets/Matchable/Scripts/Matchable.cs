@@ -7,11 +7,11 @@
     using System.Linq;
     using System.Text;
     using Utils;
+    using UnityEngine.Networking;
 
 #if UNITY_4_6 || UNITY_5
     using UnityEngine.EventSystems;
 #endif
-    using Utils;
 
     /// <summary>
     /// Provide methods to call Matchable API.
@@ -39,10 +39,6 @@
                     yield return null;
                 }
 
-                Dictionary<string, string> headers = new Dictionary<string, string>();
-                headers.Add("Content-Type", "application/json");
-                headers.Add("Authorization", "api_key " + MatchableSettings.GetAppKey());
-
                 Hashtable action = MatchableAction.Create(type, parameters);
 
                 // Simple hack to wrap the action inside a JSON array
@@ -53,8 +49,12 @@
                 }
                 byte[] postData = AsciiEncoding.StringToAscii(data);
 
-                WWW request = new WWW(MatchableSettings.GetActionsEndpoint(), postData, headers);
-                yield return request;
+                UnityWebRequest request = UnityWebRequest.Post(MatchableSettings.GetActionsEndpoint(), data);
+                request.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(data));
+                request.SetRequestHeader("Content-Type", "application/json");
+                request.SetRequestHeader("Authorization", "api_key " + MatchableSettings.GetAppKey());
+
+                yield return request.SendWebRequest();
                 MatchableResponse response = new MatchableResponse(request);
                 yield return response;
                 callback(response);
@@ -76,11 +76,9 @@
         {
             if (MatchableSettings.IsPluginEnabled())
             {
-                Dictionary<string, string> headers = new Dictionary<string, string>();
-                headers.Add("Authorization", "api_key " + MatchableSettings.GetAppKey());
-
-                WWW request = new WWW(MatchableSettings.GetRecommendationsEndpoint(), null, headers);
-                yield return request;
+                UnityWebRequest request = UnityWebRequest.Get(MatchableSettings.GetRecommendationsEndpoint());
+                request.SetRequestHeader("Authorization", "api_key " + MatchableSettings.GetAppKey());
+                yield return request.SendWebRequest();
                 MatchableResponse response = new MatchableResponse(request);
                 yield return response;
                 callback(response);
@@ -141,18 +139,22 @@
         private object _data;
         private string _text;
 
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="MatchableResponse"/> class.
         /// </summary>
         /// <param name="request">The original matchable request.</param>
-        public MatchableResponse(WWW request)
+        public MatchableResponse(UnityWebRequest request)
         {
-            _text = request.text;
+            _text = request.downloadHandler.text;
             try
             {
                 _data = MJSON.Deserialize(_text);
-            } catch (OverflowException e) {
+            }
+            catch (OverflowException e)
+            {
                 Debug.Log("Trying to deserialize empty json object");
+                Debug.Log(e);
                 _data = null;
             }
         }
