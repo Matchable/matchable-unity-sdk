@@ -160,7 +160,7 @@ namespace MatchableSDK
         /// Sets the application key.
         /// </summary>
         /// <param name="key">The key.</param>
-        public void SetAppKey(string key)
+        public static void SetAppKey(string key)
 	    {
 	        if (!Instance.appKey.Equals(key))
 	        {
@@ -188,7 +188,7 @@ namespace MatchableSDK
         /// Sets the player identifier.
         /// </summary>
         /// <param name="id">The identifier.</param>
-        public void SetPlayerId(string id)
+        public static void SetPlayerId(string id)
         {
             if (!Instance.playerId.Equals(id))
             {
@@ -255,7 +255,7 @@ namespace MatchableSDK
         /// Sets the game version.
         /// </summary>
         /// <param name="version">The version.</param>
-        public void SetGameVersion(string version)
+        public static void SetGameVersion(string version)
         {
             if (!Instance.gameVersion.Equals(version))
             {
@@ -307,12 +307,12 @@ namespace MatchableSDK
 		{	
 			if(!Instance.appKey.Equals(appKeyDefault))
 			{
-				Instance.SetAppKey(appKeyDefault);
+				SetAppKey(appKeyDefault);
 			}
 			
 			if(!Instance.playerId.Equals(playerIdDefault))
 			{
-				Instance.SetPlayerId(playerIdDefault);
+                SetPlayerId(playerIdDefault);
 			}
 		}
 

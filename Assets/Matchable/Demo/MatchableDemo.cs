@@ -39,7 +39,7 @@ namespace MatchableSDK.Demo
             // Handle the API response the way you want
             _log = response.ToJsonString();
             // Ex: get the advisor value
-            _log += "\n\nAdvisor: " + response.GetValue("advisor");
+            //_log += "\n\nAdvisor: " + response.GetValue("advisor");
             }));
         }
 
@@ -82,6 +82,8 @@ namespace MatchableSDK.Demo
         {
             // Initialize the SDK (optional)
             Matchable.Init();
+            // Set the player id
+            MatchableSettings.SetPlayerId("demo_player_id");
 
             GUIStyle style;
             style = new GUIStyle(GUI.skin.box);
