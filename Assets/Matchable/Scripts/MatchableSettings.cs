@@ -130,7 +130,7 @@ namespace MatchableSDK
 #if UNITY_EDITOR
             public string gameVersion;
 #else
-        public string gameVersion;
+        public string gameVersion = "0.1";
 #endif
 
         /// <summary>

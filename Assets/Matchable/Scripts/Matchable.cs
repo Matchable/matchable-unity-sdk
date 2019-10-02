@@ -16,7 +16,7 @@
     /// <summary>
     /// Provide methods to call Matchable API.
     /// For more information on integrating and using the Matchable SDK
-    /// please visit our help site documentation at https://wiki.matchable.io/doku.php?id=info:api:v0.9
+    /// please visit our help site documentation at http://developers.matchable.io/
     /// </summary>
     public sealed class Matchable
     {
