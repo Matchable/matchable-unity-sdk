@@ -17,22 +17,22 @@ namespace MatchableSDK
     /// </summary>
     /// <seealso cref="UnityEngine.ScriptableObject" />
     public class MatchableSettings : ScriptableObject
-	{
-		const string mSettingsAssetName = "MatchableSettings";
-	    const string mSettingsPath = "Matchable/Resources";
-	    const string mSettingsAssetExtension = ".asset";
+    {
+        const string mSettingsAssetName = "MatchableSettings";
+        const string mSettingsPath = "Matchable/Resources";
+        const string mSettingsAssetExtension = ".asset";
 
-	    const string appKeyLabel = "MATCHABLE_APP_KEY";
-	    const string appKeyDefault = "<APP_KEY>";
+        const string appKeyLabel = "MATCHABLE_APP_KEY";
+        const string appKeyDefault = "<APP_KEY>";
 
         const string playerIdLabel = "MATCHABLE_PLAYER_ID";
         const string playerIdDefault = "<DEFAULT_DEVICE_ID>";
 
-        const string exampleCredentialsWarning = "MATCHABLE: You are using the default Matchable App Key! Go to Matchable > Edit Settings to fill in your customer key. If you need help, email us: support@matchable.io"; 
+        const string exampleCredentialsWarning = "MATCHABLE: You are using the default Matchable App Key! Go to Matchable > Edit Settings to fill in your customer key. If you need help, email us: support@matchable.io";
 
-	    private static bool credentialsWarning = false;
+        private static bool credentialsWarning = false;
 
-	    private static MatchableSettings instance;
+        private static MatchableSettings instance;
 
         /// <summary>
         /// Gets the instance.
@@ -41,17 +41,17 @@ namespace MatchableSDK
         /// The instance singleton.
         /// </value>
         static MatchableSettings Instance
-	    {
-	        get
-	        {
-	            if (instance == null)
-	            {
-	                instance = Resources.Load(mSettingsAssetName) as MatchableSettings;
-	                if (instance == null)
-	                {
-	                    // If not found, autocreate the asset object.
-	                    instance = CreateInstance<MatchableSettings>();
-	#if UNITY_EDITOR
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = Resources.Load(mSettingsAssetName) as MatchableSettings;
+                    if (instance == null)
+                    {
+                        // If not found, autocreate the asset object.
+                        instance = CreateInstance<MatchableSettings>();
+#if UNITY_EDITOR
 	                    string properPath = Path.Combine(Application.dataPath, mSettingsPath);
 	                    if (!Directory.Exists(properPath))
 	                    {
@@ -62,12 +62,12 @@ namespace MatchableSDK
 	                                                   mSettingsAssetName + mSettingsAssetExtension
 	                                                  );
 	                    AssetDatabase.CreateAsset(instance, fullPath);
-	#endif
-	                }
-	            }
-	            return instance;
-	        }
-	    }
+#endif
+                    }
+                }
+                return instance;
+            }
+        }
 
 #if UNITY_EDITOR
         /// <summary>
@@ -103,11 +103,6 @@ namespace MatchableSDK
         public static string apiVersion = "v1.0";
 
         /// <summary>
-        /// The SDK version
-        /// </summary>
-        public static string sdkVersion = "2.0"; 
-        
-        /// <summary>
         /// Define if the SDK plugin is enabled
         /// True by default
         /// Can be checked out in the settings 
@@ -120,40 +115,40 @@ namespace MatchableSDK
         /// The application key
         /// </summary>
         [SerializeField]
-		public string appKey = appKeyDefault;
-        
+        public string appKey = appKeyDefault;
+
         /// <summary>
         /// The player identifier
         /// </summary>
         [SerializeField]
-		public string playerId = playerIdDefault;
+        public string playerId = playerIdDefault;
 
         /// <summary>
         /// The game version
         /// </summary>
         [SerializeField]
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
             public string gameVersion;
-        #else
-            public string gameVersion;
-        #endif
+#else
+        public string gameVersion;
+#endif
 
         /// <summary>
         /// Define if logging is enabled
         /// </summary>
         [SerializeField]
-		public bool isLoggingEnabled = true;
+        public bool isLoggingEnabled = true;
 
         public ArrayList cachedActions;
 
 
-        
 
-            void OnEnable()
+
+        void OnEnable()
         {
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
                 gameVersion = PlayerSettings.bundleVersion;
-            #endif
+#endif
         }
 
         /// <summary>
@@ -161,28 +156,28 @@ namespace MatchableSDK
         /// </summary>
         /// <param name="key">The key.</param>
         public static void SetAppKey(string key)
-	    {
-	        if (!Instance.appKey.Equals(key))
-	        {
-	            Instance.appKey = key;
-	            DirtyEditor();
-	        }
-	    }
+        {
+            if (!Instance.appKey.Equals(key))
+            {
+                Instance.appKey = key;
+                DirtyEditor();
+            }
+        }
 
         /// <summary>
         /// Gets the application key.
         /// </summary>
         /// <returns></returns>
         public static string GetAppKey()
-		{
-			if(Instance.appKey.Equals(appKeyDefault))
-			{
-				CredentialsWarning();
-				return appKeyDefault;
-			}
+        {
+            if (Instance.appKey.Equals(appKeyDefault))
+            {
+                CredentialsWarning();
+                return appKeyDefault;
+            }
 
-			return Instance.appKey;
-		}
+            return Instance.appKey;
+        }
 
         /// <summary>
         /// Sets the player identifier.
@@ -220,7 +215,7 @@ namespace MatchableSDK
         {
             return Instance.gameVersion;
         }
-        
+
         /// <summary>
         /// Build matchable.io API url for the given endpoint using the provided customer_key and player_id
         /// </summary>
@@ -265,16 +260,16 @@ namespace MatchableSDK
         }
 
         public static void SetLoggingEnabled(bool enabled)
-		{
-			Instance.isLoggingEnabled = enabled;
-			DirtyEditor();
-		}
+        {
+            Instance.isLoggingEnabled = enabled;
+            DirtyEditor();
+        }
 
-		public static bool IsLoggingEnabled()
-		{
-			return Instance.isLoggingEnabled;
-		}
-        
+        public static bool IsLoggingEnabled()
+        {
+            return Instance.isLoggingEnabled;
+        }
+
         public static void SetPluginEnabled(bool enabled)
         {
             Instance.isPluginEnabled = enabled;
@@ -294,28 +289,28 @@ namespace MatchableSDK
         }
 
         private static void CredentialsWarning()
-	    {
-	    	if(credentialsWarning == false) 
-	    	{
-				credentialsWarning = true;
+        {
+            if (credentialsWarning == false)
+            {
+                credentialsWarning = true;
 
-				Debug.LogWarning(exampleCredentialsWarning);
-			}
-	    }
+                Debug.LogWarning(exampleCredentialsWarning);
+            }
+        }
 
-		public static void resetSettings()
-		{	
-			if(!Instance.appKey.Equals(appKeyDefault))
-			{
-				SetAppKey(appKeyDefault);
-			}
-			
-			if(!Instance.playerId.Equals(playerIdDefault))
-			{
+        public static void resetSettings()
+        {
+            if (!Instance.appKey.Equals(appKeyDefault))
+            {
+                SetAppKey(appKeyDefault);
+            }
+
+            if (!Instance.playerId.Equals(playerIdDefault))
+            {
                 SetPlayerId(playerIdDefault);
-			}
-		}
+            }
+        }
 
-	    #endregion
-	}
+        #endregion
+    }
 }

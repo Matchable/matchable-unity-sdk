@@ -139,7 +139,7 @@
         private object _data;
         private string _text;
 
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MatchableResponse"/> class.
         /// </summary>
@@ -183,7 +183,7 @@
         /// <returns>The value matching the key</returns>
         public object GetValue(string key)
         {
-            return GetData()!=null? GetData()[key]:null;
+            return GetData() != null ? GetData()[key] : null;
         }
     }
 }

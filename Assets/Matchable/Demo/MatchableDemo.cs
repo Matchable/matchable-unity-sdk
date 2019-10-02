@@ -36,10 +36,10 @@ namespace MatchableSDK.Demo
             // Call GetAdvisor asynchronously as a Coroutine
             yield return StartCoroutine(Matchable.GetRecommendations((response) =>
             {
-            // Handle the API response the way you want
-            _log = response.ToJsonString();
-            // Ex: get the advisor value
-            //_log += "\n\nAdvisor: " + response.GetValue("advisor");
+                // Handle the API response the way you want
+                _log = response.ToJsonString();
+                // Ex: get the advisor value
+                //_log += "\n\nAdvisor: " + response.GetValue("advisor");
             }));
         }
 
@@ -70,8 +70,8 @@ namespace MatchableSDK.Demo
             // Call any MatchableAction asynchronously as a Coroutine
             yield return StartCoroutine(Matchable.SendAction("sample_action_type", parameters, (response) =>
             {
-            // Handle the API response the way you want
-            _log = response.ToJsonString();
+                // Handle the API response the way you want
+                _log = response.ToJsonString();
             }));
         }
 
