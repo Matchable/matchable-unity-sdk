@@ -83,7 +83,7 @@ namespace MatchableSDK.Demo
             // Initialize the SDK (optional)
             Matchable.Init();
             // Set the player id
-            MatchableSettings.SetPlayerId("demo_player_id");
+            // MatchableSettings.SetPlayerId("demo_player_id");
 
             GUIStyle style;
             style = new GUIStyle(GUI.skin.box);
