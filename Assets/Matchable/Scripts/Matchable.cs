@@ -29,7 +29,7 @@
         /// <param name="parameters">The parameters.</param>
         /// <param name="callback">The callback.</param>
         /// <returns></returns>
-        public static IEnumerator SendAction(string type, object parameters, Action<MatchableResponse> callback)
+        public static IEnumerator SendAction(string type, Hashtable parameters, Action<MatchableResponse> callback)
         {
             if (MatchableSettings.IsPluginEnabled())
             {
@@ -115,14 +115,13 @@
         /// </summary>
         /// <param name="type">Action type (ex: game_start)</param>
         /// <param name="parameters">Action parameters (JSON string)</param>
-        public static Hashtable Create(string type, object parameters)
+        public static Hashtable Create(string type, Hashtable parameters)
         {
             Hashtable action = new Hashtable();
             //adding device info
             action.Add("device_model", SystemInfo.deviceModel);
             action.Add("device_type", SystemInfo.deviceType);
             action.Add("operating_system", SystemInfo.operatingSystem);
-
             action.Add("version", MatchableSettings.GetGameVersion());
             action.Add("type", type);
             action.Add("parameters", parameters);
