@@ -80,7 +80,7 @@ namespace MatchableSDK.Utils
         /// Parses the string json into a value
         /// </summary>
         /// <param name="json">A JSON string.</param>
-        /// <returns>An List&lt;object&gt;, a Dictionary&lt;string, object&gt;, a double, an integer,a string, null, true, or false</returns>
+        /// <returns>An List;object;, a Hashtable;string, object;, a double, an integer,a string, null, true, or false</returns>
         public static object Deserialize(string json)
         {
             // save the string for debug information
@@ -145,9 +145,10 @@ namespace MatchableSDK.Utils
                 json = null;
             }
 
-            Dictionary<string, object> ParseObject()
+            // Modified MJSON to parse as hashtable and not dictionary
+            Hashtable ParseObject()
             {
-                Dictionary<string, object> table = new Dictionary<string, object>();
+                Hashtable table = new Hashtable();
 
                 // ditch opening brace
                 json.Read();
@@ -163,7 +164,7 @@ namespace MatchableSDK.Utils
                             continue;
                         case TOKEN.CURLY_CLOSE:
                             return table;
-                        case TOKEN.STRING:
+                        default:
                             // name
                             string name = ParseString();
                             if (name == null)
@@ -180,14 +181,8 @@ namespace MatchableSDK.Utils
                             json.Read();
 
                             // value
-                            TOKEN valueToken = NextToken;
-                            object value = ParseByToken(valueToken);
-                            if (value == null && valueToken != TOKEN.NULL)
-                                return null;
-                            table[name] = value;
+                            table[name] = ParseValue();
                             break;
-                        default:
-                            return null;
                     }
                 }
             }

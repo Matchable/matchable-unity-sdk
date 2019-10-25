@@ -39,8 +39,16 @@ namespace MatchableSDK.Demo
             {
                 // Handle the API response the way you want
                 _log = response.ToJsonString();
-                // Ex: get the advisor value
-                //_log += "\n\nAdvisor: " + response.GetValue("advisor");
+                // get the response as hashtable
+                Hashtable hash = response.GetData();
+                foreach (DictionaryEntry entry in hash)
+                {
+                    string str = String.Format("Key: {0}, Type: {1}", entry.Key.ToString(), entry.Value.GetType().ToString());
+                    Debug.Log(str);
+                }
+                // Ex: get the recoms value
+                // List<string> recoms = (List<string>) response.GetValue("recoms");
+                // _log += "\n\nRecom: " + recoms[0];
             }));
         }
 
@@ -79,6 +87,11 @@ namespace MatchableSDK.Demo
             resources.Add("resource1", 0);
             resources.Add("resource2", 0);
             parameters.Add("resources", resources);
+
+            List<string> recoms = new List<string>();
+            recoms.Add("recom1");
+            recoms.Add("recom2");
+            parameters.Add("recoms", recoms);
 
             // Call any MatchableAction asynchronously as a Coroutine
             yield return StartCoroutine(Matchable.SendAction("sample_action_type", parameters, (response) =>
